@@ -1,3 +1,6 @@
+以下は、Vue.jsで初期生成したファイル
+
+
 # experiment_vue
 
 This template should help get you started developing with Vue 3 in Vite.
