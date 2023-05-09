@@ -1,52 +1,44 @@
 <script setup lang="ts">
-    import { ref } from 'vue'
-    import axios from 'axios'
-    import {useAuthStore} from '@/stores/auth';
+import {computed, ref} from 'vue'
+import {useAuthStore} from '@/stores/authStore';
+import {createAxiosInstance} from "@/api/axiosInstance";
+import type {AxiosResponse, AxiosInstance} from "axios";
+import type {Auth} from "@/api/Auth";
 
-    const eMail = ref('suke.shun.kato2@gmail.com')
-    const password = ref('password')
+const eMail = ref('suke.shun.kato2@gmail.com')
+const password = ref('password')
 
-    const axiosInstance = axios.create({
-        baseURL: 'http://127.0.0.1:8080/api',       // TODO
-        timeout: 10000,
-        // withCredentials: true,
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    });
+const axiosInstance = computed<AxiosInstance>(() => {
+    return createAxiosInstance()
+})
 
-    function login() {
-        console.log(eMail.value)
-        console.log(password.value)
 
-        axiosInstance
-            .post('/users/login', {
-                email: eMail.value,
-                password: password.value
-            })
-            .then(function (response) {
-                const auth = useAuthStore()
-                const data = response.data
+function login() {
+    console.log(eMail.value)
+    console.log(password.value)
 
-                auth.$state.auth = {
-                    access_token: data.access_token,
-                    token_type: data.token_type
-                }
+    axiosInstance
+        .value
+        .post('/users/login', {
+            email: eMail.value,
+            password: password.value
+        })
+        .then(function (response: AxiosResponse<Auth>) {
+console.log(response);
 
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
+            const authStore = useAuthStore()
+            const data: Auth = response.data
+console.log(authStore.auth)
+            // Pinia に Auth を保存
+            authStore.$state.auth = data
 
-    function aaaa() {
-        const aaa = useAuthStore().auth
-        console.log(aaa?.access_token)
-        console.log(aaa?.token_type)
-    }
+console.log(authStore.auth)
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
 </script>
 
 <template>
@@ -67,7 +59,7 @@
         </form>
     </div>
     <div>
-        <button @click="aaaa">check</button>
+        <router-link to="/">Home</router-link>
     </div>
 </template>
 
