@@ -12,7 +12,7 @@ type HttpHeader = {
 export const createAxiosInstance = (auth?: Auth): AxiosInstance => {
 
     return axios.create({
-        baseURL: 'http://127.0.0.1:8080/api',       // TODO 環境別に定義する
+        baseURL: import.meta.env.VITE_API_ENDPOINT,
         timeout: 10000,         // TODO
         headers: createHeaders(auth)
     });
