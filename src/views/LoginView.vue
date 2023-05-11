@@ -2,11 +2,13 @@
 import {computed, ref} from 'vue'
 import {useAuthStore} from '@/stores/authStore';
 import {createAxiosInstance} from "@/api/axiosInstance";
-import type {AxiosResponse, AxiosInstance} from "axios";
-import type {Auth} from "@/api/Auth";
+import type {Ref} from 'vue'
+import type {AxiosResponse, AxiosInstance} from 'axios';
+import type {Auth} from '@/api/response/Auth';
+import type {LoginRequest} from "@/api/request/LoginRequest";
 
-const eMail = ref('suke.shun.kato2@gmail.com')
-const password = ref('password')
+const eMail: Ref<string> = ref('suke.shun.kato2@gmail.com')
+const password: Ref<string> = ref('password')
 
 const axiosInstance = computed<AxiosInstance>(() => {
     return createAxiosInstance()
@@ -14,25 +16,22 @@ const axiosInstance = computed<AxiosInstance>(() => {
 
 
 function login() {
-    console.log(eMail.value)
-    console.log(password.value)
+    const data: LoginRequest = {
+        email: eMail.value,
+        password: password.value
+    }
 
     axiosInstance
         .value
-        .post('/users/login', {
-            email: eMail.value,
-            password: password.value
-        })
+        .post<Auth>('/users/login', data)
         .then(function (response: AxiosResponse<Auth>) {
-console.log(response);
+            console.log(response)
 
-            const authStore = useAuthStore()
-            const data: Auth = response.data
-console.log(authStore.auth)
+            const auth: Auth = response.data
+
             // Pinia に Auth を保存
-            authStore.$state.auth = data
-
-console.log(authStore.auth)
+            const authStore = useAuthStore()
+            authStore.$state.auth = auth
         })
         .catch(function (error) {
             console.log(error);

@@ -1,6 +1,6 @@
 import axios from "axios";
 import type {AxiosInstance} from "axios";
-import type {Auth} from "@/api/Auth";
+import type {Auth} from "@/api/response/Auth";
 
 type HttpHeader = {
     'Accept': string,
@@ -13,7 +13,7 @@ export const createAxiosInstance = (auth?: Auth): AxiosInstance => {
 
     return axios.create({
         baseURL: import.meta.env.VITE_API_ENDPOINT,
-        timeout: 10000,         // TODO
+        timeout: 10000,         // タイムアウト[ミリ秒]
         headers: createHeaders(auth)
     });
 }
