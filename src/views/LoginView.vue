@@ -6,9 +6,13 @@ import type {Ref} from 'vue'
 import type {AxiosResponse, AxiosInstance} from 'axios';
 import type {Auth} from '@/api/response/Auth';
 import type {LoginRequest} from "@/api/request/LoginRequest";
+import type { RouteLocation} from "vue-router";
+import { useRoute, useRouter} from "vue-router";
 
 const eMail: Ref<string> = ref('suke.shun.kato2@gmail.com')
 const password: Ref<string> = ref('password')
+const router = useRouter()
+const route = useRoute()
 
 const axiosInstance = computed<AxiosInstance>(() => {
     return createAxiosInstance()
@@ -32,6 +36,10 @@ function login() {
             // Pinia に Auth を保存
             const authStore = useAuthStore()
             authStore.$state.auth = auth
+
+            // ログイン成功したとみなして、リダイレクト
+            const fromRouteLocation: RouteLocation|undefined = route.redirectedFrom // リダイレクト元のロケーションを取得
+            router.push(fromRouteLocation?.fullPath ?? '/')   // リダイレクト元へリダイレクト（fromRouteLocation が undefined のときは '/'）
         })
         .catch(function (error) {
             console.log(error);
@@ -56,9 +64,6 @@ function login() {
                 <input type="submit" value="ログイン" />
             </div>
         </form>
-    </div>
-    <div>
-        <router-link to="/">Home</router-link>
     </div>
 </template>
 

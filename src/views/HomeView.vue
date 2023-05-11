@@ -2,7 +2,6 @@
 import {ref} from "vue";
 import {createAxiosInstance} from "@/api/axiosInstance";
 import {useAuthStore} from "@/stores/authStore";
-import {storeToRefs} from "pinia";
 import type {Ref} from "vue";
 import type {AxiosResponse} from 'axios';
 import type {Recipe, Recipes} from "@/api/response/Recipes";
@@ -14,25 +13,16 @@ const recipesRef: Ref<Recipe[]|undefined> = ref()
 const isLoadingRef: Ref<boolean> = ref(false)
 
 const authStore = useAuthStore()
-const authRef = storeToRefs(authStore).auth
-
-// 例外処理
-if (authRef.value === undefined) {
-    throw new Error('ログインしてください')
-}
 
 // OptionsAPI の beforeCreate, created のタイミングと同じ
-getRecipeList(authRef.value!)
+getRecipeList(authStore.auth!)
 
 function getRecipeList(auth: Auth) {
-
-
     // 値を初期化
     errorRef.value = undefined
     isLoadingRef.value = true
 
-
-    // 値を読み込み
+    // レシピ一覧をAPIで取得
     return createAxiosInstance(auth)
         .get<Recipes>('/recipes')
         .then(function (response :AxiosResponse<Recipes>) {
