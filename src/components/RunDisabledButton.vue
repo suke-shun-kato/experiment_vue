@@ -25,7 +25,7 @@ async function disabledAndRun(): Promise<void> {
 </script>
 
 <template>
-    <button :disabled="isProcessing" @click.prevent="disabledAndRun" >
+    <button :disabled="isProcessing" @click="disabledAndRun" >
         <!-- 親コンポーネントの値をここに表示する -->
         <slot/>
     </button>

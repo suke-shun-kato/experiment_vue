@@ -54,7 +54,6 @@ const login = async (): Promise<void> => {
 
 <template>
     <div>
-        <!-- デフォルトで form の submit動作を抑止して、代わりに login() メソッドを実行する -->
         <form>
             <div>
                 <label for="e-mail">Email address</label>
@@ -65,7 +64,7 @@ const login = async (): Promise<void> => {
                 <input type="password" id="password" v-model.trim="password" />
             </div>
             <div>
-                <RunDisabledButton type="submit" :onClick="login">ログイン</RunDisabledButton>
+                <RunDisabledButton :onClick="login">ログイン</RunDisabledButton>
             </div>
         </form>
     </div>
