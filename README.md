@@ -1,46 +1,52 @@
-# experiment_vue
+# はじめに
 
-This template should help get you started developing with Vue 3 in Vite.
+このリポジトリはVue.jsの実験用のリポジトリです。
 
-## Recommended IDE Setup
+[Laravelで作成した「レシピAPI」](https://github.com/suke-shun-kato/experiment_laravel)のクライアントサイド
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+# 技術概要
+- Vue.js 3の CompositionAPI & TypeScript でコードを記載
+- Vue Router でページ遷移
+- Vite でビルドやサーバーを起動
+- Pinia でデータストアを管理
 
-## Type Support for `.vue` Imports in TS
+# 初期設定（ローカル）
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+```shell
+git clone git@github.com:suke-shun-kato/experiment_vue.git
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+# コマンドメモ
 
-```sh
+## 開発用にビルド＆サーバー起動（ブラウザで確認）
+
+```shell
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## 本番用に、型チェック＆ビルド（コンパイル、ソース圧縮）
 
-```sh
+```shell
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+## 本番用コンパイル済みソースに対してサーバー起動（ブラウザで確認）
+
+```shell
+npm run preview
+```
+
+## Lint with [ESLint](https://eslint.org/)
 
 ```sh
 npm run lint
 ```
+
+# 参考リンク
+
+- [Vue.js 公式](https://ja.vuejs.org/)
+- [Vite 公式（英語）](https://ja.vitejs.dev/)
+- [Vue Router](https://router.vuejs.org/)
+- [Pinia 公式（英語）](https://pinia.vuejs.org/)
