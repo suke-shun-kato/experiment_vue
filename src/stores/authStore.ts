@@ -7,7 +7,11 @@ export const useAuthStore = defineStore(
     'auth',
     () => {
         const auth: Ref<Auth|undefined> = ref()
-        return { auth }
+        function $reset() {
+            auth.value = undefined
+        }
+
+        return { auth, $reset }
     },
     // 永続化（リロードしてもデータが消えないようにする）
     {

@@ -6,6 +6,7 @@ import type {Ref} from "vue";
 import type {AxiosResponse} from 'axios';
 import type {Recipe, Recipes} from "@/api/response/Recipes";
 import type {Auth} from "@/api/response/Auth";
+import {useRouter} from "vue-router";
 
 // 変数の定義
 const errorRef: Ref<string|undefined> = ref()
@@ -13,6 +14,7 @@ const recipesRef: Ref<Recipe[]|undefined> = ref()
 const isLoadingRef: Ref<boolean> = ref(false)
 
 const authStore = useAuthStore()
+const router = useRouter()
 
 // OptionsAPI の beforeCreate, created のタイミングと同じ
 getRecipeList(authStore.auth!)
@@ -39,20 +41,30 @@ function getRecipeList(auth: Auth) {
             isLoadingRef.value = false
         });
 }
+
+function logout(): void {
+    authStore.$reset()
+
+    // ログインページへリダイレクト
+    router.push({name: 'login'})
+}
 </script>
 
 <template>
     <div>
-        <div v-if="isLoadingRef">Loading...</div>
-        <div v-if="errorRef">{{ errorRef }}</div>
-        <div v-if="!recipesRef">データがありません</div>
-        <div v-for="recipe in recipesRef" :key="recipe.id">
-            <div>
-                <div>{{ recipe.title }}</div>
-                <div>{{ recipe.description }}</div>
-                <div v-for="image in recipe.images" :key="image.id">
-                    <div>{{ image.id }}</div>
-                    <div>{{ image.created_at }}</div>
+        <button @click="logout">ログアウト</button>
+        <div>
+            <div v-if="isLoadingRef">Loading...</div>
+            <div v-if="errorRef">{{ errorRef }}</div>
+            <div v-if="!recipesRef">データがありません</div>
+            <div v-for="recipe in recipesRef" :key="recipe.id">
+                <div>
+                    <div>{{ recipe.title }}</div>
+                    <div>{{ recipe.description }}</div>
+                    <div v-for="image in recipe.images" :key="image.id">
+                        <div>{{ image.id }}</div>
+                        <div>{{ image.created_at }}</div>
+                    </div>
                 </div>
             </div>
         </div>

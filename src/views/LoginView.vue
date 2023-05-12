@@ -6,13 +6,15 @@ import type {Ref} from 'vue'
 import type {AxiosResponse, AxiosInstance} from 'axios';
 import type {Auth} from '@/api/response/Auth';
 import type {LoginRequest} from "@/api/request/LoginRequest";
-import type { RouteLocation} from "vue-router";
+import type {RouteLocation} from "vue-router";
 import { useRoute, useRouter} from "vue-router";
 import RunDisabledButton from "@/components/RunDisabledButton.vue";
 import axios from "axios";
 
-const eMail: Ref<string> = ref('suke.shun.kato2@gmail.com')
-const password: Ref<string> = ref('password')
+// const eMail: Ref<string> = ref('suke.shun.kato2@gmail.com')
+const eMail: Ref<string> = ref('')
+// const password: Ref<string> = ref('password')
+const password: Ref<string> = ref('')
 const router = useRouter()
 const route = useRoute()
 
