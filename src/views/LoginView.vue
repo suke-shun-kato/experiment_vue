@@ -8,6 +8,7 @@ import type {Auth} from '@/api/response/Auth';
 import type {LoginRequest} from "@/api/request/LoginRequest";
 import type { RouteLocation} from "vue-router";
 import { useRoute, useRouter} from "vue-router";
+import RunDisabledButton from "@/components/RunDisabledButton.vue";
 
 const eMail: Ref<string> = ref('suke.shun.kato2@gmail.com')
 const password: Ref<string> = ref('password')
@@ -18,32 +19,23 @@ const axiosInstance = computed<AxiosInstance>(() => {
     return createAxiosInstance()
 })
 
-
-function login() {
+const login = async (): Promise<void> => {
+    // ログインAPIを実行
     const data: LoginRequest = {
         email: eMail.value,
         password: password.value
     }
+    const response = await axiosInstance.value.post<Auth>('/users/login', data)
+    console.log(response)
 
-    axiosInstance
-        .value
-        .post<Auth>('/users/login', data)
-        .then(function (response: AxiosResponse<Auth>) {
-            console.log(response)
+    // Pinia に Auth を保存
+    const auth: Auth = response.data
+    const authStore = useAuthStore()
+    authStore.$state.auth = auth
 
-            const auth: Auth = response.data
-
-            // Pinia に Auth を保存
-            const authStore = useAuthStore()
-            authStore.$state.auth = auth
-
-            // ログイン成功したとみなして、リダイレクト
-            const fromRouteLocation: RouteLocation|undefined = route.redirectedFrom // リダイレクト元のロケーションを取得
-            router.push(fromRouteLocation?.fullPath ?? '/')   // リダイレクト元へリダイレクト（fromRouteLocation が undefined のときは '/'）
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+    // ログイン成功したとみなして、リダイレクト
+    const fromRouteLocation: RouteLocation|undefined = route.redirectedFrom // リダイレクト元のロケーションを取得
+    await router.push(fromRouteLocation?.fullPath ?? '/')   // リダイレクト元へリダイレクト（fromRouteLocation が undefined のときは '/'）
 }
 
 </script>
@@ -51,7 +43,7 @@ function login() {
 <template>
     <div>
         <!-- デフォルトで form の submit動作を抑止して、代わりに login() メソッドを実行する -->
-        <form @submit.prevent="login">
+        <form>
             <div>
                 <label for="e-mail">Email address</label>
                 <input type="email" id="e-mail" v-model.trim="eMail" />
@@ -61,7 +53,7 @@ function login() {
                 <input type="password" id="password" v-model.trim="password" />
             </div>
             <div>
-                <input type="submit" value="ログイン" />
+                <RunDisabledButton type="submit" :onClick="login">ログイン</RunDisabledButton>
             </div>
         </form>
     </div>
