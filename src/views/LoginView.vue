@@ -9,6 +9,7 @@ import type {LoginRequest} from "@/api/request/LoginRequest";
 import type { RouteLocation} from "vue-router";
 import { useRoute, useRouter} from "vue-router";
 import RunDisabledButton from "@/components/RunDisabledButton.vue";
+import axios from "axios";
 
 const eMail: Ref<string> = ref('suke.shun.kato2@gmail.com')
 const password: Ref<string> = ref('password')
@@ -25,17 +26,28 @@ const login = async (): Promise<void> => {
         email: eMail.value,
         password: password.value
     }
-    const response = await axiosInstance.value.post<Auth>('/users/login', data)
-    console.log(response)
+    try {
+        const response: AxiosResponse = await axiosInstance.value.post<Auth>('/users/login', data)
+        console.log(response)
 
-    // Pinia に Auth を保存
-    const auth: Auth = response.data
-    const authStore = useAuthStore()
-    authStore.$state.auth = auth
+        // Pinia に Auth を保存
+        const auth: Auth = response.data
+        const authStore = useAuthStore()
+        authStore.$state.auth = auth
 
-    // ログイン成功したとみなして、リダイレクト
-    const fromRouteLocation: RouteLocation|undefined = route.redirectedFrom // リダイレクト元のロケーションを取得
-    await router.push(fromRouteLocation?.fullPath ?? '/')   // リダイレクト元へリダイレクト（fromRouteLocation が undefined のときは '/'）
+        // ログイン成功したとみなして、リダイレクト
+        const fromRouteLocation: RouteLocation|undefined = route.redirectedFrom // リダイレクト元のロケーションを取得
+        await router.push(fromRouteLocation?.fullPath ?? '/')   // リダイレクト元へリダイレクト（fromRouteLocation が undefined のときは '/'）
+    } catch (e: any) {
+        if (axios.isAxiosError(e) && e.response?.status === 401) {
+            // ログイン認証NGのとき
+            alert(e.response!.data.message)
+            console.log(e)
+        } else {
+            alert('エラー')
+            console.error(e)
+        }
+    }
 }
 
 </script>
