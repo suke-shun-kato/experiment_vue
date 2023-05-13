@@ -56,7 +56,7 @@ function logout(): void {
         <div>
             <div v-if="isLoadingRef">Loading...</div>
             <div v-if="errorRef">{{ errorRef }}</div>
-            <div v-if="!recipesRef">データがありません</div>
+            <div v-if="!recipesRef || recipesRef.length === 0">データがありません</div>
             <div v-for="recipe in recipesRef" :key="recipe.id">
                 <div>
                     <div>{{ recipe.title }}</div>
