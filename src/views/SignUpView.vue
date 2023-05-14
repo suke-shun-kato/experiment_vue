@@ -1,37 +1,36 @@
 <script setup lang="ts">
-import {computed, ref} from 'vue'
+import {ref} from 'vue'
 import {useAuthStore} from '@/stores/authStore';
-import {createAxiosInstance} from "@/api/axiosInstance";
 import type {Ref} from 'vue'
 import type {AxiosResponse, AxiosInstance} from 'axios';
-import type {Auth} from '@/api/response/Auth';
+import type {AuthResParam} from '@/api/responseParams/AuthResParam';
 import { useRouter} from "vue-router";
 import RunDisabledButton from "@/components/RunDisabledButton.vue";
 import axios from "axios";
-import type {SignUpRequest} from "@/api/request/SignUpRequest";
+import type {SignUpReqParam} from "@/api/requestParams/SignUpReqParam";
+import {NoAuthApiService} from "@/api/service/NoAuthApiService";
 
 const eMail: Ref<string> = ref('')
 const password: Ref<string> = ref('')
 const name: Ref<string> = ref('')
 const router = useRouter()
-
-const axiosInstance = computed<AxiosInstance>(() => {
-    return createAxiosInstance()
-})
+const apiService = new NoAuthApiService()
 
 const signUp = async (): Promise<void> => {
     // ユーザー登録APIを実行
-    const data: SignUpRequest = {
+    const data: SignUpReqParam = {
         name: name.value,
         email: eMail.value,
         password: password.value
     }
+
     try {
-        const response: AxiosResponse<Auth> = await axiosInstance.value.post<Auth>('/users', data)
+        // ユーザー新規登録APIを実行
+        const response: AxiosResponse<AuthResParam> = await apiService.signUp(data)
         console.log(response)
 
-        // Pinia に Auth を保存
-        const auth: Auth = response.data
+        // Pinia に AuthResParam を保存
+        const auth: AuthResParam = response.data
         const authStore = useAuthStore()
         authStore.$state.auth = auth
 

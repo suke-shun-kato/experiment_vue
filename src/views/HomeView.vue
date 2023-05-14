@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {createAxiosInstance} from "@/api/axiosInstance";
 import {useAuthStore} from "@/stores/authStore";
 import type {Ref} from "vue";
 import type {AxiosResponse} from 'axios';
-import type {Recipe, Recipes} from "@/api/response/Recipes";
-import type {Auth} from "@/api/response/Auth";
+import type {Recipe, Recipes} from "@/api/responseParams/Recipes";
 import {useRouter} from "vue-router";
+import {AuthApiService} from "@/api/service/AuthApiService";
 
 // 変数の定義
 const errorRef: Ref<string|undefined> = ref()
@@ -16,17 +15,18 @@ const isLoadingRef: Ref<boolean> = ref(false)
 const authStore = useAuthStore()
 const router = useRouter()
 
-// OptionsAPI の beforeCreate, created のタイミングと同じ
-getRecipeList(authStore.auth!)
+const apiService = new AuthApiService(authStore.auth!)
 
-function getRecipeList(auth: Auth) {
+// OptionsAPI の beforeCreate, created のタイミングと同じ
+getRecipeList()
+
+function getRecipeList() {
     // 値を初期化
     errorRef.value = undefined
     isLoadingRef.value = true
 
     // レシピ一覧をAPIで取得
-    return createAxiosInstance(auth)
-        .get<Recipes>('/recipes')
+    return apiService.getRecipes()
         .then(function (response :AxiosResponse<Recipes>) {
             console.log(response)
 

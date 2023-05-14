@@ -1,6 +1,6 @@
 import axios from "axios";
 import type {AxiosInstance} from "axios";
-import type {Auth} from "@/api/response/Auth";
+import type {AuthResParam} from "@/api/responseParams/AuthResParam";
 
 type HttpHeader = {
     'Accept': string,
@@ -9,7 +9,7 @@ type HttpHeader = {
     'Authorization'?: string
 }
 
-export const createAxiosInstance = (auth?: Auth): AxiosInstance => {
+export const createAxiosInstance = (auth?: AuthResParam): AxiosInstance => {
 
     return axios.create({
         baseURL: import.meta.env.VITE_API_ENDPOINT,
@@ -18,7 +18,7 @@ export const createAxiosInstance = (auth?: Auth): AxiosInstance => {
     });
 }
 
-function createHeaders(auth: Auth | undefined): HttpHeader {
+function createHeaders(auth: AuthResParam | undefined): HttpHeader {
 
     const headers: HttpHeader = {
         'Accept': 'application/json',

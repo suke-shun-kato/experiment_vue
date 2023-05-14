@@ -1,4 +1,4 @@
-import type {ResponseBase} from "@/api/response/ResponseBase";
+import type {ResponseBase} from "@/api/responseParams/ResponseBase";
 
 export interface Recipes {
     recipes: Recipe[]
