@@ -10,11 +10,13 @@ import { useRoute, useRouter} from "vue-router";
 import RunDisabledButton from "@/components/RunDisabledButton.vue";
 import axios from "axios";
 import {NoAuthApiService} from "@/api/service/NoAuthApiService";
+import type {LoginError} from "@/api/errorResponseParams/LoginError";
 
 // const eMail: Ref<string> = ref('suke.shun.kato2@gmail.com')
 const eMail: Ref<string> = ref('')
 // const password: Ref<string> = ref('password')
 const password: Ref<string> = ref('')
+const errorRef: Ref<LoginError|undefined> = ref()
 const router = useRouter()
 const route = useRoute()
 const apiService = new NoAuthApiService()
@@ -38,14 +40,25 @@ const login = async (): Promise<void> => {
         const fromRouteLocation: RouteLocation|undefined = route.redirectedFrom // リダイレクト元のロケーションを取得
         await router.push(fromRouteLocation?.fullPath ?? '/')   // リダイレクト元へリダイレクト（fromRouteLocation が undefined のときは '/'）
     } catch (e: any) {
-        if (axios.isAxiosError(e) && e.response?.status === 401) {
-            // ログイン認証NGのとき
-            alert(e.response!.data.message)
-            console.log(e)
+        if (axios.isAxiosError(e)) {
+            if (e.response?.status === 401) {
+            // 認証エラー
+                errorRef.value = e.response?.data
+                console.log(e)
+            } else if (e.response?.status === 422) {
+            // バリデーションエラー
+                errorRef.value = e.response?.data
+                console.log(errorRef)
+                console.log(errorRef.value)
+            } else {
+                alert('エラー')
+                console.error(e)
+            }
         } else {
             alert('エラー')
             console.error(e)
         }
+
     }
 }
 
@@ -54,13 +67,24 @@ const login = async (): Promise<void> => {
 <template>
     <div>
         <form>
+            <div v-if="errorRef">{{ errorRef.message }}</div>
             <div>
                 <label for="e-mail">Email address</label>
                 <input type="email" id="e-mail" v-model.trim="eMail" />
+                <div v-if="errorRef && errorRef.errors">
+                    <div v-for="(emailError, index) in errorRef.errors.email" :key="index" >
+                        <p>{{ emailError }}</p>
+                    </div>
+                </div>
             </div>
             <div>
                 <label for="password">Password</label>
                 <input type="password" id="password" v-model.trim="password" />
+                <div v-if="errorRef && errorRef.errors">
+                    <div v-for="(passwordError, index) in errorRef.errors.password" :key="index" >
+                        <p>{{ passwordError }}</p>
+                    </div>
+                </div>
             </div>
             <div>
                 <RunDisabledButton :onClick="login">ログイン</RunDisabledButton>
