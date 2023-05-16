@@ -1,5 +1,6 @@
-export interface LoginErrorResponse {
-    message: string
+import type {BaseErrorResponse} from "@/api/errorResponseParams/BaseErrorResponse";
+
+export interface LoginErrorResponse extends BaseErrorResponse {
     // バリデーションエラーのときerrorsの値がある
     errors?: LoginValidationErrors
 }

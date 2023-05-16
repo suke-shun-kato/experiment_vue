@@ -12,7 +12,7 @@ export interface Recipe extends BaseResponse {
     images: Image[],
 }
 
-export interface Image extends BaseResponse{
+export interface Image extends BaseResponse {
     id: number
 }
 
