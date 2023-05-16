@@ -1,10 +1,10 @@
 export interface LoginError {
     message: string
     // バリデーションエラーのときerrorsの値がある
-    errors?: LoginValidationError
+    errors?: LoginValidationErrors
 }
 
-export interface LoginValidationError {
+export interface LoginValidationErrors {
     email: string[]
     password: string[]
 }

@@ -11,6 +11,7 @@ import RunDisabledButton from "@/components/RunDisabledButton.vue";
 import axios from "axios";
 import {NoAuthApiService} from "@/api/service/NoAuthApiService";
 import type {LoginError} from "@/api/errorResponseParams/LoginError";
+import ValidationError from "@/components/ValidationError.vue";
 
 // const eMail: Ref<string> = ref('suke.shun.kato2@gmail.com')
 const eMail: Ref<string> = ref('')
@@ -71,20 +72,12 @@ const login = async (): Promise<void> => {
             <div>
                 <label for="e-mail">Email address</label>
                 <input type="email" id="e-mail" v-model.trim="eMail" />
-                <div v-if="errorRef && errorRef.errors">
-                    <div v-for="(emailError, index) in errorRef.errors.email" :key="index" >
-                        <p>{{ emailError }}</p>
-                    </div>
-                </div>
+                <ValidationError :error-messages="errorRef?.errors?.email"/>
             </div>
             <div>
                 <label for="password">Password</label>
                 <input type="password" id="password" v-model.trim="password" />
-                <div v-if="errorRef && errorRef.errors">
-                    <div v-for="(passwordError, index) in errorRef.errors.password" :key="index" >
-                        <p>{{ passwordError }}</p>
-                    </div>
-                </div>
+                <ValidationError :error-messages="errorRef?.errors?.password" />
             </div>
             <div>
                 <RunDisabledButton :onClick="login">ログイン</RunDisabledButton>
