@@ -41,28 +41,27 @@ const login = async (): Promise<void> => {
         const fromRouteLocation: RouteLocation|undefined = route.redirectedFrom // リダイレクト元のロケーションを取得
         await router.push(fromRouteLocation?.fullPath ?? '/')   // リダイレクト元へリダイレクト（fromRouteLocation が undefined のときは '/'）
     } catch (e: any) {
+        console.error(e)
+
         if (axios.isAxiosError(e)) {
-            if (e.response?.status === 401) {
-            // 認証エラー
+            if (e.response !== undefined
+                && [401, 422].includes(e.response?.status)) {
+            // 認証エラー、バリデーションエラー
                 errorRef.value = e.response?.data
-                console.log(e)
-            } else if (e.response?.status === 422) {
-            // バリデーションエラー
-                errorRef.value = e.response?.data
-                console.log(errorRef)
-                console.log(errorRef.value)
+
             } else {
-                alert('エラー')
-                console.error(e)
+                errorRef.value = {
+                    message: e.message
+                }
             }
         } else {
-            alert('エラー')
-            console.error(e)
+            errorRef.value = {
+                message: 'runtime error'
+            }
         }
 
     }
 }
-
 </script>
 
 <template>
