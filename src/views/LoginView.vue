@@ -3,28 +3,28 @@ import {ref} from 'vue'
 import {useAuthStore} from '@/stores/authStore';
 import type {Ref} from 'vue'
 import type {AxiosResponse} from 'axios';
-import type {AuthResParam} from '@/api/responseParams/AuthResParam';
-import type {LoginReqParam} from "@/api/requestParams/LoginReqParam";
+import type {AuthResponse} from '@/api/responseParams/AuthResponse';
+import type {LoginReqest} from "@/api/requestParams/LoginReqest";
 import type {RouteLocation} from "vue-router";
 import { useRoute, useRouter} from "vue-router";
 import RunDisabledButton from "@/components/RunDisabledButton.vue";
 import axios from "axios";
 import {NoAuthApiService} from "@/api/service/NoAuthApiService";
-import type {LoginError} from "@/api/errorResponseParams/LoginError";
+import type {LoginErrorResponse} from "@/api/errorResponseParams/LoginErrorResponse";
 import ValidationError from "@/components/ValidationError.vue";
 
 // const eMail: Ref<string> = ref('suke.shun.kato2@gmail.com')
 const eMail: Ref<string> = ref('')
 // const password: Ref<string> = ref('password')
 const password: Ref<string> = ref('')
-const errorRef: Ref<LoginError|undefined> = ref()
+const errorRef: Ref<LoginErrorResponse|undefined> = ref()
 const router = useRouter()
 const route = useRoute()
 const apiService = new NoAuthApiService()
 
 const login = async (): Promise<void> => {
     // ログインAPIを実行
-    const loginReqParam: LoginReqParam = {
+    const loginReqParam: LoginReqest = {
         email: eMail.value,
         password: password.value
     }
@@ -32,8 +32,8 @@ const login = async (): Promise<void> => {
         const response: AxiosResponse = await apiService.login(loginReqParam)
         console.log(response)
 
-        // Pinia に AuthResParam を保存
-        const auth: AuthResParam = response.data
+        // Pinia に AuthResponse を保存
+        const auth: AuthResponse = response.data
         const authStore = useAuthStore()
         authStore.$state.auth = auth
 

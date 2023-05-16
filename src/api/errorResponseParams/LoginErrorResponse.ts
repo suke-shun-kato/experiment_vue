@@ -1,4 +1,4 @@
-export interface LoginError {
+export interface LoginErrorResponse {
     message: string
     // バリデーションエラーのときerrorsの値がある
     errors?: LoginValidationErrors

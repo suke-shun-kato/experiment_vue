@@ -3,7 +3,7 @@ import {ref} from "vue";
 import {useAuthStore} from "@/stores/authStore";
 import type {Ref} from "vue";
 import type {AxiosResponse} from 'axios';
-import type {Recipe, Recipes} from "@/api/responseParams/Recipes";
+import type {Recipe, RecipesResponse} from "@/api/responseParams/RecipesResponse";
 import {useRouter} from "vue-router";
 import {AuthApiService} from "@/api/service/AuthApiService";
 
@@ -27,7 +27,7 @@ function getRecipeList() {
 
     // レシピ一覧をAPIで取得
     return apiService.getRecipes()
-        .then(function (response :AxiosResponse<Recipes>) {
+        .then(function (response :AxiosResponse<RecipesResponse>) {
             console.log(response)
 
             recipesRef.value = response.data.recipes

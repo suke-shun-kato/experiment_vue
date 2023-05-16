@@ -2,12 +2,12 @@
 import {ref} from 'vue'
 import {useAuthStore} from '@/stores/authStore';
 import type {Ref} from 'vue'
-import type {AxiosResponse, AxiosInstance} from 'axios';
-import type {AuthResParam} from '@/api/responseParams/AuthResParam';
+import type {AxiosResponse} from 'axios';
+import type {AuthResponse} from '@/api/responseParams/AuthResponse';
 import { useRouter} from "vue-router";
 import RunDisabledButton from "@/components/RunDisabledButton.vue";
 import axios from "axios";
-import type {SignUpReqParam} from "@/api/requestParams/SignUpReqParam";
+import type {SignUpRequest} from "@/api/requestParams/SignUpRequest";
 import {NoAuthApiService} from "@/api/service/NoAuthApiService";
 
 const eMail: Ref<string> = ref('')
@@ -18,7 +18,7 @@ const apiService = new NoAuthApiService()
 
 const signUp = async (): Promise<void> => {
     // ユーザー登録APIを実行
-    const data: SignUpReqParam = {
+    const data: SignUpRequest = {
         name: name.value,
         email: eMail.value,
         password: password.value
@@ -26,11 +26,11 @@ const signUp = async (): Promise<void> => {
 
     try {
         // ユーザー新規登録APIを実行
-        const response: AxiosResponse<AuthResParam> = await apiService.signUp(data)
+        const response: AxiosResponse<AuthResponse> = await apiService.signUp(data)
         console.log(response)
 
-        // Pinia に AuthResParam を保存
-        const auth: AuthResParam = response.data
+        // Pinia に AuthResponse を保存
+        const auth: AuthResponse = response.data
         const authStore = useAuthStore()
         authStore.$state.auth = auth
 
