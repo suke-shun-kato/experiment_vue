@@ -11,7 +11,7 @@ import RunDisabledButton from "@/components/RunDisabledButton.vue";
 import {NoAuthApiService} from "@/api/service/NoAuthApiService";
 import type {LoginErrorResponse} from "@/api/errorResponseParams/LoginErrorResponse";
 import ValidationError from "@/components/ValidationError.vue";
-import {executeFormApi} from "@/api/utils/executeFormApi";
+import {executeFormApi} from "@/api/executeFormApi";
 
 // const eMail: Ref<string> = ref('suke.shun.kato2@gmail.com')
 const eMail: Ref<string> = ref('')

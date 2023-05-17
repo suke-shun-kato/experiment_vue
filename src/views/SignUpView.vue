@@ -9,7 +9,7 @@ import RunDisabledButton from "@/components/RunDisabledButton.vue";
 import axios from "axios";
 import type {SignUpRequest} from "@/api/requestParams/SignUpRequest";
 import {NoAuthApiService} from "@/api/service/NoAuthApiService";
-import {executeFormApi} from "@/api/utils/executeFormApi";
+import {executeFormApi} from "@/api/executeFormApi";
 import type {SignUpErrorResponse} from "@/api/errorResponseParams/SignUpErrorResponse";
 import ValidationError from "@/components/ValidationError.vue";
 

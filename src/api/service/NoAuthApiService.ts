@@ -1,7 +1,7 @@
 import type {AuthResponse} from "@/api/responseParams/AuthResponse";
 import type {AxiosResponse, AxiosInstance} from "axios";
 import type {SignUpRequest} from "@/api/requestParams/SignUpRequest";
-import {createAxiosInstance} from "@/api/utils/axiosInstance";
+import {createAxiosInstance} from "@/api/service/createAxiosInstance";
 import type {LoginReqest} from "@/api/requestParams/LoginReqest";
 
 export class NoAuthApiService {

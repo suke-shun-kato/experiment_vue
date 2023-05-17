@@ -7,7 +7,7 @@ import type {BaseErrorResponse} from "@/api/errorResponseParams/BaseErrorRespons
 export const executeFormApi = async <T extends BaseErrorResponse> (
     errorResponseRef: Ref<T|undefined>,
     executeFunc: () => Promise<void>
-) => {
+): Promise<void> => {
 
     try {
         await executeFunc()
