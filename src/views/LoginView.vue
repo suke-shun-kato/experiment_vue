@@ -12,6 +12,8 @@ import axios from "axios";
 import {NoAuthApiService} from "@/api/service/NoAuthApiService";
 import type {LoginErrorResponse} from "@/api/errorResponseParams/LoginErrorResponse";
 import ValidationError from "@/components/ValidationError.vue";
+import {ErrorResponseStatusCodes} from "@/api/StatusCode";
+import type {StatusCode} from "@/api/StatusCode";
 
 // const eMail: Ref<string> = ref('suke.shun.kato2@gmail.com')
 const eMail: Ref<string> = ref('')
@@ -42,13 +44,11 @@ const login = async (): Promise<void> => {
         await router.push(fromRouteLocation?.fullPath ?? '/')   // リダイレクト元へリダイレクト（fromRouteLocation が undefined のときは '/'）
     } catch (e: any) {
         console.error(e)
-
         if (axios.isAxiosError(e)) {
             if (e.response !== undefined
-                && [401, 422].includes(e.response?.status)) {
+                && ErrorResponseStatusCodes.includes(e.response?.status as StatusCode)) {
             // 認証エラー、バリデーションエラー
                 errorRef.value = e.response?.data
-
             } else {
                 errorRef.value = {
                     message: e.message
