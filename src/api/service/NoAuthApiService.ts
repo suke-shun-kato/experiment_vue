@@ -1,8 +1,8 @@
-import type {AuthResParam} from "@/api/responseParams/AuthResParam";
+import type {AuthResponse} from "@/api/responseParams/AuthResponse";
 import type {AxiosResponse, AxiosInstance} from "axios";
-import type {SignUpReqParam} from "@/api/requestParams/SignUpReqParam";
-import {createAxiosInstance} from "@/api/utils/axiosInstance";
-import type {LoginReqParam} from "@/api/requestParams/LoginReqParam";
+import type {SignUpRequest} from "@/api/requestParams/SignUpRequest";
+import {createAxiosInstance} from "@/api/service/createAxiosInstance";
+import type {LoginReqest} from "@/api/requestParams/LoginReqest";
 
 export class NoAuthApiService {
     private axiosInstance: AxiosInstance
@@ -11,11 +11,11 @@ export class NoAuthApiService {
         this.axiosInstance = createAxiosInstance()
     }
 
-    public async signUp(signUpRequest: SignUpReqParam): Promise<AxiosResponse<AuthResParam>> {
-        return this.axiosInstance.post<AuthResParam>('/users', signUpRequest)
+    public async signUp(signUpRequest: SignUpRequest): Promise<AxiosResponse<AuthResponse>> {
+        return this.axiosInstance.post<AuthResponse>('/users', signUpRequest)
     }
 
-    public async login(loginReqParam: LoginReqParam): Promise<AxiosResponse<AuthResParam>> {
-        return this.axiosInstance.post<AuthResParam>('/users/login', loginReqParam)
+    public async login(loginReqParam: LoginReqest): Promise<AxiosResponse<AuthResponse>> {
+        return this.axiosInstance.post<AuthResponse>('/users/login', loginReqParam)
     }
 }

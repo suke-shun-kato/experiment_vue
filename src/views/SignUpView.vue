@@ -2,52 +2,46 @@
 import {ref} from 'vue'
 import {useAuthStore} from '@/stores/authStore';
 import type {Ref} from 'vue'
-import type {AxiosResponse, AxiosInstance} from 'axios';
-import type {AuthResParam} from '@/api/responseParams/AuthResParam';
+import type {AxiosResponse} from 'axios';
+import type {AuthResponse} from '@/api/responseParams/AuthResponse';
 import { useRouter} from "vue-router";
 import RunDisabledButton from "@/components/RunDisabledButton.vue";
 import axios from "axios";
-import type {SignUpReqParam} from "@/api/requestParams/SignUpReqParam";
+import type {SignUpRequest} from "@/api/requestParams/SignUpRequest";
 import {NoAuthApiService} from "@/api/service/NoAuthApiService";
+import {executeFormApi} from "@/api/executeFormApi";
+import type {SignUpErrorResponse} from "@/api/errorResponseParams/SignUpErrorResponse";
+import ValidationError from "@/components/ValidationError.vue";
 
 const eMail: Ref<string> = ref('')
 const password: Ref<string> = ref('')
 const name: Ref<string> = ref('')
+const errorResponseRef: Ref<SignUpErrorResponse|undefined> = ref()
 const router = useRouter()
 const apiService = new NoAuthApiService()
 
 const signUp = async (): Promise<void> => {
     // ユーザー登録APIを実行
-    const data: SignUpReqParam = {
+    const data: SignUpRequest = {
         name: name.value,
         email: eMail.value,
         password: password.value
     }
 
-    try {
+    await executeFormApi(errorResponseRef, async () => {
         // ユーザー新規登録APIを実行
-        const response: AxiosResponse<AuthResParam> = await apiService.signUp(data)
+        const response: AxiosResponse<AuthResponse> = await apiService.signUp(data)
         console.log(response)
 
-        // Pinia に AuthResParam を保存
-        const auth: AuthResParam = response.data
+        // Pinia に AuthResponse を保存
+        const auth: AuthResponse = response.data
         const authStore = useAuthStore()
         authStore.$state.auth = auth
 
         // ログイン成功したとみなして、リダイレクト
         await router.push('/')   // リダイレクト元へリダイレクト（fromRouteLocation が undefined のときは '/'）
-    } catch (e: any) {
-        if (axios.isAxiosError(e) && e.response?.status === 401) {
-            // ユーザー登録NGのとき
-            alert(e.response!.data.message)
-            console.log(e)
-        } else {
-            alert('エラー')
-            console.error(e)
-        }
-    }
+    })
 }
-
 </script>
 
 <template>
@@ -56,14 +50,17 @@ const signUp = async (): Promise<void> => {
             <div>
                 <label for="name">User name</label>
                 <input type="text" id="name" v-model.trim="name" />
+                <ValidationError :error-messages="errorResponseRef?.errors?.name"/>
             </div>
             <div>
                 <label for="e-mail">Email address</label>
                 <input type="email" id="e-mail" v-model.trim="eMail" />
+                <ValidationError :error-messages="errorResponseRef?.errors?.email"/>
             </div>
             <div>
                 <label for="password">Password</label>
                 <input type="password" id="password" v-model.trim="password" />
+                <ValidationError :error-messages="errorResponseRef?.errors?.password"/>
             </div>
             <div>
                 <RunDisabledButton :onClick="signUp">登録</RunDisabledButton>
